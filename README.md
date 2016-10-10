@@ -17,6 +17,8 @@
 - 进入virtualenv，安装selenium开发版`pip install selenium==ver-num`
 - 安装django
 
+- Selenium3.0.0b3无法使用get_attribute的一个坑 [解决方法](http://stackoverflow.com/questions/39527858/how-can-i-disable-web-driver-exceptions-when-using-the-mozilla-marionette-web-dr)
+
 ## 名词
 
 功能测试 = 验收测试 = 端到端测试 这几个属于一般属于黑箱测试
