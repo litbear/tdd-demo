@@ -50,7 +50,7 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
         # 提交后跳转到新的地址，该地址的格式要符合下列正则表达式
         import time
-        time.sleep(3)
+        time.sleep(5)
         edith_list_url = self.browser.current_url
         self.assertRegex(edith_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: Buy peacock feathers')
