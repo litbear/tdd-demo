@@ -15,9 +15,18 @@
 - 初始化virtualenv
 
 - 进入virtualenv，安装selenium开发版`pip install selenium==ver-num`
+
 - 安装django
 
+## 一些问题的解决方法
+
 - Selenium3.0.0b3无法使用get_attribute的一个坑 [解决方法](http://stackoverflow.com/questions/39527858/how-can-i-disable-web-driver-exceptions-when-using-the-mozilla-marionette-web-dr)
+
+- 另一个坑，Django 1.10中会为同一HttpRequest多次渲染时分配不同的csrf_token
+
+因此`render_to_string`方法和`response.content.decode()`传入同一HttpRequest对象时渲染的静态页必然不同。
+
+详见：[Django 中的 csrf_token 与单元测试](http://www.cnblogs.com/panzeyan/p/5819373.html)，以及[How can I disable Web Driver Exceptions when using the Mozilla Marionette web driver with Selenium](http://stackoverflow.com/questions/39527858/how-can-i-disable-web-driver-exceptions-when-using-the-mozilla-marionette-web-dr) 以及 [Django 1.10 release notes](https://docs.djangoproject.com/en/1.10/releases/1.10/) To protect against BREACH attacks, the CSRF protection mechanism now changes the form token value on every request (while keeping an invariant secret which can be used to validate the different tokens).
 
 ## 名词
 
