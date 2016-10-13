@@ -1,24 +1,23 @@
 import time
 import unittest
-
 from django.test.testcases import LiveServerTestCase
+
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from time import sleep
 
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
     
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
         
     def tearDown(self):
+#         self.browser.refresh()
         self.browser.quit()
         
     def check_for_row_in_list_table(self, row_text):
-        import time
-        time.sleep(3)
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
@@ -49,21 +48,24 @@ class NewVisitorTest(LiveServerTestCase):
         
         inputbox.send_keys(Keys.ENTER)
         # 提交后跳转到新的地址，该地址的格式要符合下列正则表达式
-        import time
-        time.sleep(5)
+
+        time.sleep(3)
         edith_list_url = self.browser.current_url
         self.assertRegex(edith_list_url, '/lists/.+')
+        time.sleep(3)
         self.check_for_row_in_list_table('1: Buy peacock feathers')
         
         # 页面中又显示了一个文本框，可以输入其他的待办事项
         # 她输入了 “ Use peacock feathers to make a fly ” （使用孔雀羽毛做假蝇）
         # 伊迪丝做事很有条理
+        time.sleep(3)
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Use peacock feathers to make a fly')
         inputbox.send_keys(Keys.ENTER)
         
         
         # 页面再次更新，她的清单中显示了这两个待办事项
+        time.sleep(3)
         self.check_for_row_in_list_table('1: Buy peacock feathers')
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
         
@@ -84,7 +86,6 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys('Buy milk')
         inputbox.send_keys(Keys.ENTER)
         # 弗朗西斯获得了他的唯一URL
-        import time
         time.sleep(3)
         francis_list_url = self.browser.current_url
         self.assertRegex(francis_list_url, '/lists/.+')
@@ -94,5 +95,25 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertIn('Buy milk', page_text)
         # 两人都很满意，去睡觉了
-
+    
+    def test_layout_and_styling(self):
+        # 伊迪丝访问首页
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+        # 她看到输入框完美地居中显示
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=10
+        )
+        
+        # 她新建了一个清单，看到输入框仍完美地居中显示
+        inputbox.send_keys('testing\n')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=10
+        )
 
